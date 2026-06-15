@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhishGuard — URL Threat Detector</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/png" href="../PhishGuard_Extension/icon.png">
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-brand" onclick="showPage('scanner')">
+    [ PHISHGUARD ]
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-scanner" onclick="showPage('scanner')">[ DETECTOR ]</button>
+    <button class="nav-tab"        id="tab-dataset" onclick="showPage('dataset')">[ DATASET EXPLORER ]</button>
+    <button class="nav-tab"        id="tab-history" onclick="showPage('history')">[ SCAN HISTORY ]</button>
+  </div>
+</nav>
+
+<div class="page active" id="page-scanner">
+  <div class="scanner-wrap">
+    <div class="container">
+      <header>
+        <div class="logo-row">
+          <img src="../PhishGuard_Extension/icon.png" alt="Logo" style="width: 40px; height: 40px; filter: drop-shadow(0 0 8px rgba(63,185,80,0.5));">
+          <h1>PhishGuard</h1>
+        </div>
+        <p class="tagline">URL Threat Detection System</p>
+      </header>
+
+      <div class="input-card">
+        <div class="input-label">Enter URL to scan</div>
+        <div class="input-row">
+          <input type="text" id="urlInput" placeholder="https://example.com or paste any suspicious link..." />
+          <button class="scan-btn" id="scanBtn" onclick="scanURL()">Scan</button>
+        </div>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div>ANALYZING URL...</div>
+      </div>
+
+      <div class="result-card" id="resultCard">
+        <div class="result-header" id="resultHeader">
+          <span class="result-status" id="resultStatus"></span>
+          <div class="confidence-wrap">
+            <span class="confidence-badge" id="confidenceBadge"></span>
+            <div class="confidence-bar" aria-hidden="true">
+              <div class="confidence-fill" id="confidenceFill"></div>
+            </div>
+          </div>
+        </div>
+        <div class="result-body">
+          <div class="url-display" id="urlDisplay"></div>
+          <div class="risk-summary" id="riskSummary"></div>
+          <div class="features-title">Extracted Features</div>
+          <div class="features-grid" id="featuresGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-history">
+  <div class="dataset-wrap">
+    <div class="page-header">
+      <div class="page-title"><span>Local Storage</span></div>
+      <h2>Scan History</h2>
+    </div>
+    <div class="controls">
+      <button class="history-clear" id="clearHistoryBtn" type="button" style="padding: 11px 18px; font-size: 11px;">Clear History</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Date</th><th>URL</th><th>Verdict</th><th>Confidence</th></tr>
+        </thead>
+        <tbody id="historyList"></tbody>
+      </table>
+      <div class="no-results" id="noHistoryResults">No scan history available.</div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-dataset">
+  <div class="dataset-wrap">
+    <div class="page-header">
+      <div class="page-title"><span>Training Data</span></div>
+      <h2>Dataset Viewer</h2>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number total" id="totalCount">—</div>
+        <div class="stat-label">Total URLs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number legit" id="legitCount">—</div>
+        <div class="stat-label">Legitimate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number phish" id="phishCount">—</div>
+        <div class="stat-label">Phishing</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <input class="search-input" type="text" id="searchInput" placeholder="Search URLs..." oninput="applyFilters()" />
+      <button class="filter-btn active-all" id="btn-all"   onclick="setFilter('all')">All</button>
+      <button class="filter-btn"            id="btn-legit" onclick="setFilter('legit')">Legitimate</button>
+      <button class="filter-btn"            id="btn-phish" onclick="setFilter('phish')">Phishing</button>
+    </div>
+
+    <div class="row-count" id="rowCount"></div>
+    <div class="loading" id="datasetLoading" style="display: none; padding: 32px; font-family: var(--mono); font-size: 13px; color: var(--green); letter-spacing: 2px; text-align: center;">
+      <div class="spinner"></div>
+      <div>LOADING DATASET...</div>
+    </div>
+
+    <div class="table-wrap" id="datasetTableWrap" style="display: none;">
+      <table>
+        <thead>
+          <tr><th>#</th><th>URL</th><th>Label</th></tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+      <div class="no-results" id="noResults">No URLs match your search.</div>
+    </div>
+  </div>
+</div>
+
+<footer>PHISHGUARD v1.0 &nbsp;·&nbsp; ML-POWERED &nbsp;·&nbsp; RANDOM FOREST</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>
